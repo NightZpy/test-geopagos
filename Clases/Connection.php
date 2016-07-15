@@ -16,10 +16,3 @@ class Connection
 		return $this->db->query($query);
 	}
 }
-
-
-
-/*$results = $db->query('SELECT bar FROM foo');
-while ($row = $results->fetchArray()) {
-    var_dump($row);
-}*/
