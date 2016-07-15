@@ -222,12 +222,27 @@ class Model
 				} else {
 					switch ($key) {
 						case 'min':
+							print("\nValue=$value");
 							if ($value < $limit)
 								throw new Exception("$attributeVar: El valor no puede ser inferior a $limit!", 1);
 						break;
 
-						case 'date':
-
+						case 'date':	
+							print("\nLimite....");
+							foreach ($limit as $rule => $condition) {
+								switch ($rule) {
+									case 'min':
+										if ($condition == 'today') {
+											if((time()-(60*60*24)) > strtotime($value))
+												throw new Exception("$attributeVar: La fecha no debe haber pasado!", 1);
+										}	
+									break;
+									
+									default:
+										# code...
+										break;
+								}
+							}
 						break;
 						
 						default:

@@ -9,7 +9,7 @@ class Pago extends Model
 	protected $tableName = 'pagos';
 	protected $primaryKey = 'codigo_pago';
 
-	protected $validation = [
+	protected $validationRules = [
 		'importe' => 'min:1',
 		'fecha' => 'date:min:today'
 	];
