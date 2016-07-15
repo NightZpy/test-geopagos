@@ -5,12 +5,13 @@
 */
 class Pago extends Model
 {
-	protected $attributes = ['codigopago', 'importe', 'fecha'];
+	protected $attributes = ['codigo_pago', 'importe', 'fecha'];
 	protected $tableName = 'pagos';
+	protected $primaryKey = 'codigo_pago';
 
 	protected $validation = [
 		'importe' => 'min:1',
-		'fecha' => 'date_min:today'
+		'fecha' => 'date:min:today'
 	];
 
 	protected $relations = [

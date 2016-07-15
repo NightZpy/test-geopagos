@@ -168,8 +168,8 @@ class Model
 		print("\nAttributes....................");
 		print_r($this->attributes);
 		foreach ($this->attributes as $attribute => $value) {
-			$attributeVar = underscoreToCamelCase($attribute);
-			$attributes[$attribute] = $this->$attributeVar;
+			$attributeVar = underscoreToCamelCase($value);
+			$attributes[$value] = $this->$attributeVar;
 		}
 		return $attributes;
 	}
@@ -183,8 +183,11 @@ class Model
 				$subRules = [];
 				foreach ($rules as $rule) {
 					$subRule = explode(':', $rule);
-					if (count($subRule) > 1)
-						$subRules[$subRule[0]] = $subRule[1];
+					if (count($subRule) > 1)						
+						if (count($subRule) == 3)							
+							$subRules[$subRule[0]] = [$subRule[1] => $subRule[2]];					
+						else
+							$subRules[$subRule[0]] = $subRule[1];					
 					else
 						$subRules[] = $subRule[0];					
 				}
@@ -198,9 +201,41 @@ class Model
 		$this->parseValidationRules();
 		if (!count($this->rules))
 			return true;
+		print("\nRules: ");
+		print_r($this->rules);
 
 		foreach ($this->rules as $field => $rules) {
-			
+			$attributeVar = underscoreToCamelCase($field);
+			$value = $this->$attributeVar;
+			foreach ($rules as $key => $limit) {
+				print("\nkey=$key");
+				if (is_numeric($key)) {
+					switch ($limit) {
+						case 'required':
+							if (empty($value))
+								throw new Exception("$attributeVar El valor no puede estar vacío!", 1);
+						break;						
+						default:
+							# code...
+						break;
+					}
+				} else {
+					switch ($key) {
+						case 'min':
+							if ($value < $limit)
+								throw new Exception("$attributeVar: El valor no puede ser inferior a $limit!", 1);
+						break;
+
+						case 'date':
+
+						break;
+						
+						default:
+							# code...
+							break;
+					}
+				}
+			}
 		}
 	}
 }
