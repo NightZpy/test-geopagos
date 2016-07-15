@@ -15,6 +15,6 @@ class Pago extends Model
 	];
 
 	protected $relations = [
-		'usuarios' => ['hasMany' => ['Usuario' => 'codigo_usuario']]
+		'usuarios' => ['hasMany' => ['Usuario' => 'codigousuario']]
 	];	
 }

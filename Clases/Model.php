@@ -98,8 +98,13 @@ class Model
 		switch ($action) {
 			case 'insert':				
 				$keys 	= array_keys($attributes);
+				if (!isset($attributes[$this->primaryKey]) || empty($attributes[$this->primaryKey]))
+					$attributes[$this->primaryKey] = 'DEFAULT';
+				
 				foreach ($attributes as $key => $value) 
-					$attributes[$key] = "'" . $value . "'";			
+					if (!$value == 'DEFAULT')
+						$attributes[$key] = "'" . $value . "'";	
+
 				$values = implode(', ', array_values($attributes));
 				$query 	= str_replace('$table_name$', $this->tableName, self::INSERT_QUERY);
 				$query 	= str_replace('$fields$', implode(', ', $keys), $query);

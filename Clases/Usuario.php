@@ -16,7 +16,7 @@ class Usuario extends Model
 	];
 
 	protected $relations = [
-		'favoritos' => ['hasMany' => ['Favorito' => 'codigo_usuario']],
-		'pagos' => ['hasMany' => ['Pago' => 'codigo_usuario']]
+		'favoritos' => ['hasMany' => ['Favorito' => 'codigo_usuario', 'pivot' => 'favoritos']],
+		'pagos' => ['hasMany' => ['Pago' => 'codigo_usuario', 'pivot' => 'pago_usuario']]
 	];
 }
