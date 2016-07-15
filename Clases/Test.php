@@ -13,12 +13,7 @@ try {
 	*/
 
 	$usuario->findBy('codigo_usuario', 20, 'usuarios');
-	print("\nVars: ");
-	print_r(get_object_vars($usuario));
-	print("\nUsuario: " . $usuario->usuario);	
-	$usuario->usuario = 'Paul';
-	print("\nUsuario: " . $usuario->usuario);
-	$usuario->update();
+	$usuario->delete();
 } catch (ValidationNotNullException $e) {
     $e->showMessage();
 }

@@ -52,13 +52,12 @@ class Model
 		$this->run(self::makeQuery('update', $attributes, $filter));
 	}
 
-	public static function delete($attributes = [], $filter = [])
+	public function delete()
 	{
-		if ( count($attributes) ) {
-			$this->mapToValidAttributes($attributes);
-			$this->run(self::makeQuery('delete', $attributes, $filter));
-		}
-		return $this;
+		$attributes = $this->attributesToArray();
+		$filter = [$this->primaryKey => $attributes[$this->primaryKey]];
+		unset($attributes[$this->primaryKey]);
+		$this->run(self::makeQuery('delete', null, $filter));
 	}		
 
 	public function select($fields = [], $filters = [], $order = [])
@@ -73,39 +72,34 @@ class Model
 		$this->makeAttributes($this->attributes);
 	}
 
-	private function makeFilter($filters, $comparator = '=', $logic = 'AND')
+	private function makeFilter($filters, $comparator = '=', $separator = 'AND')
 	{
 		$filter = '';
 		$i = 0;
 		foreach ($filters as $key => $value) {
-			if ($i == count($filters)) {
-				
+			if ($i == count($filters) - 1) {
+				$filter .= $key . $comparator . "'" . $value . "'";
 			} else {
-
-			}			
+				$filter .= $key . $comparator . "'" . $value . "' " . $separator . ' ';
+			}		
+			$i++;	
 		}
-
-
-			$filters[$key] = "'" . $value . "'";
-		$filter = http_build_query ($filters, '', ' AND ');
-		print("\nFiltesrs: $filter");
+		return $filter;
 	}
 
-	public function makeQuery($action, $attributes, $filters = null)
+	public function makeQuery($action, $attributes = null, $filters = null)
 	{
-		$query = null;
-		$keys 	= array_keys($attributes);
+		$query = null;			
 		$filter = null;		
 		if ($filters) {
 			$filter = $this->makeFilter($filters);
 		}	
 
-
-		foreach ($attributes as $key => $value) 
-			$attributes[$key] = "'" . $value . "'";
-
 		switch ($action) {
 			case 'insert':				
+				$keys 	= array_keys($attributes);
+				foreach ($attributes as $key => $value) 
+					$attributes[$key] = "'" . $value . "'";			
 				$values = implode(', ', array_values($attributes));
 				$query 	= str_replace('$table_name$', $this->tableName, self::INSERT_QUERY);
 				$query 	= str_replace('$fields$', implode(', ', $keys), $query);
@@ -113,12 +107,11 @@ class Model
 			break;
 
 			case 'update':
-				$values = http_build_query	($attributes, '', ', ');
-				$filters =
+				$values = $this->makeFilter($attributes, '=', ', ');
 				$query 	= str_replace('$table_name$', $this->tableName, self::UPDATE_QUERY);
 				$query 	= str_replace('$values$', $values, $query);
-				if ($filters)
-					$query .= ' ' . str_replace('$filter$', $filters, self::WHERE_QUERY);
+				if ($filter)
+					$query .= ' ' . str_replace('$filter$', $filter, self::WHERE_QUERY);
 			break;	
 
 			case 'select':
@@ -128,7 +121,7 @@ class Model
 			case 'delete':
 				$query 	= str_replace('$table_name$', $this->tableName, self::DELETE_QUERY);
 				if ($filters)
-					$query .= ' ' . str_replace('$filter$', $filters, self::WHERE_QUERY);
+					$query .= ' ' . str_replace('$filter$', $filter, self::WHERE_QUERY);
 			break;	
 
 			default:
