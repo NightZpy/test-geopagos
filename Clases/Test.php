@@ -56,7 +56,7 @@ require_once ('Pago.php');
 	print_r($usuario);
 	$usuario->usuario = 'Paul Lenyn';
 	$usuario->update();
-	$usuario->findByPk($usuario->codigo_usuario);
+	$usuario->findByPk($usuario->codigoUsuario);
 	print("\n----------------------------");
 	print_r($usuario);
 	//$usuario->delete();
