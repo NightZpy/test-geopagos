@@ -25,7 +25,7 @@ require_once ('Pago.php');
 	$pagos = array_chunk($pagos, 3);
 	$i = 0;
 	foreach ($pagos as $pago) {
-		$usuarios[$i].pagos($pago);
+		$usuarios[$i]->pagos($pago);
 		$i++;
 	}
 

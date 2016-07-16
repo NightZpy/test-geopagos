@@ -65,12 +65,26 @@ class Model
 		# code...
 	}
 
-	public function findBy($field, $value)
+	public function findByPk($value)
 	{
-		$query = 'SELECT * FROM ' . $this->tableName . ' WHERE ' . $field . '=' . $value . ' LIMIT 1';
+		$query = 'SELECT * FROM ' . $this->tableName . ' WHERE ' . $this->primaryKey . '=' . $value . ' LIMIT 1';
 		$this->attributes = $this->run($query);
 		$this->makeAttributes($this->attributes);
 	}
+
+	public function findBy($field, $value)
+	{
+		$query = 'SELECT * FROM ' . $this->tableName . ' WHERE ' . $field . '=' . $value;
+		$this->attributes = $this->run($query);
+		if (!count($this->attributes)) 
+			return false;
+		$objets = [];
+		foreach ($this->attributes as $attribute) {			
+			$this->makeAttributes($this->attributes);
+			$objets[] = $this;
+		}
+		return $objets;
+	}	
 
 	private function makeFilter($filters, $comparator = '=', $separator = 'AND')
 	{
@@ -100,7 +114,7 @@ class Model
 				$keys 	= array_keys($attributes);
 				if (!isset($attributes[$this->primaryKey]) || empty($attributes[$this->primaryKey]))
 					$attributes[$this->primaryKey] = 'DEFAULT';
-				
+
 				foreach ($attributes as $key => $value) 
 					if (!$value == 'DEFAULT')
 						$attributes[$key] = "'" . $value . "'";	
