@@ -50,7 +50,7 @@ require_once ('Pago.php');
 		print("	" . $pago->importe . "	|	" . $pago->fecha . "	\n");
 	}*/
 	
-	$usuario = new Usuario;
+/*	$usuario = new Usuario;
 	$usuario->findByPk(rand(397, 435));
 	print("\n----------------------------");
 	print_r($usuario);
@@ -58,7 +58,17 @@ require_once ('Pago.php');
 	$usuario->update();
 	$usuario->findByPk($usuario->codigoUsuario);
 	print("\n----------------------------");
+	print_r($usuario);*/
+
+	$usuario = new Usuario;
+	$pk = rand(397, 435);
+	$usuario->findByPk($pk);
+	print("\n---------------Usuario a borrar-------------\n");
 	print_r($usuario);
-	//$usuario->delete();
+	$usuario->delete();
+	print("\n--------------Buscando de nuevo $pk-------------\n");
+	$usuario->findByPk($pk);
+	print_r($usuario);
+
 
 
