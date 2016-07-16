@@ -66,9 +66,6 @@ require_once ('Pago.php');
 	print("\n---------------Usuario a borrar-------------\n");
 	print_r($usuario);
 	$usuario->delete();
-	print("\n--------------Buscando de nuevo $pk-------------\n");
-	$usuario->findByPk($pk);
-	print_r($usuario);
 
 
 
