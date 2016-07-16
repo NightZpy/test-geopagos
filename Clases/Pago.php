@@ -63,4 +63,13 @@ class Pago extends Model
 		$pagoUsuario->codigoPago = $this->codigoPago;
 		$pagoUsuario->save();		
 	}
+
+	public function delete()
+	{
+		$pagoUsuario = new PagoUsuario;
+		$pagosUsuario = $pagoUsuario->findBy('codigo_pago', $this->codigoPago;
+		foreach ($pagosUsuario as $pagoUsuario) 
+			$pagoUsuario->delete('codigo_pago');
+		parent::delete();		
+	}		
 }
