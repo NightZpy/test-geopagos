@@ -24,9 +24,9 @@ class Model
 	}
 
 	private function run($query)
-	{
-		$this->validate();		
-		return $this->runQuery($query);		
+	{		
+		$attributes = $this->runQuery($query);		
+		return $attributes;
 	}
 
 	public static function create($attributes = [])
@@ -41,6 +41,7 @@ class Model
 	public function save()
 	{
 		$attributes = $this->attributesToArray();
+		$this->validate();
 		$this->run(self::makeQuery('insert', $attributes));
 	}
 
@@ -49,6 +50,7 @@ class Model
 		$attributes = $this->attributesToArray();
 		$filter = [$this->primaryKey => $attributes[$this->primaryKey]];
 		unset($attributes[$this->primaryKey]);
+		$this->validate();		
 		$this->run(self::makeQuery('update', $attributes, $filter));
 	}
 
@@ -68,23 +70,27 @@ class Model
 	public function findByPk($value)
 	{
 		$query = 'SELECT * FROM ' . $this->tableName . ' WHERE ' . $this->primaryKey . '=' . $value . ' LIMIT 1';
-		$this->attributes = $this->run($query);
-		$this->makeAttributes($this->attributes);
+		$attributes = $this->run($query);
+		$this->makeAttributes($attributes[0]);
 	}
 
 	public function findBy($field, $value)
 	{
 		$query = 'SELECT * FROM ' . $this->tableName . ' WHERE ' . $field . '=' . $value;
-		$this->attributes = $this->run($query);
-		if (!count($this->attributes)) 
+		$rows = $this->run($query);
+		if (!count($rows)) 
 			return false;
-		$objets = [];
-		foreach ($this->attributes as $attribute) {			
-			$this->makeAttributes($this->attributes);
-			$objets[] = $this;
-		}
-		return $objets;
+		return $this->makeObjectsFromRows($rows);
 	}	
+
+	public function all()
+	{
+		$query = 'SELECT * FROM ' . $this->tableName;
+		$rows = $this->run($query);
+		if (!count($rows)) 
+			return false;
+		return $this->makeObjectsFromRows($rows);
+	}
 
 	private function makeFilter($filters, $comparator = '=', $separator = 'AND')
 	{
@@ -110,14 +116,13 @@ class Model
 		}	
 
 		switch ($action) {
-			case 'insert':				
-				$keys 	= array_keys($attributes);
-				if (!isset($attributes[$this->primaryKey]) || empty($attributes[$this->primaryKey]))
-					$attributes[$this->primaryKey] = 'DEFAULT';
+			case 'insert':								
+				if (isset($this->primaryKey) && (!isset($attributes[$this->primaryKey]) || empty($attributes[$this->primaryKey])))
+					unset($attributes[$this->primaryKey]);
 
 				foreach ($attributes as $key => $value) 
-					if (!$value == 'DEFAULT')
 						$attributes[$key] = "'" . $value . "'";	
+				$keys 	= array_keys($attributes);
 
 				$values = implode(', ', array_values($attributes));
 				$query 	= str_replace('$table_name$', $this->tableName, self::INSERT_QUERY);
@@ -153,12 +158,35 @@ class Model
 
 	public function runQuery($query)
 	{
-		return $this->db->fetch($query)->fetchArray(SQLITE3_ASSOC);
+		$results = $this->db->fetch($query);
+		$array = [];
+		while ($result = $results->fetchArray(SQLITE3_ASSOC)) {
+			$array[] = $result;
+		}
+		return $array;
+	}
+
+	private function makeObjectsFromRows($rows)
+	{
+		$objets = [];				
+		foreach ($rows as $row) 
+			$objets[] = $this->makeObjectFromRow($row);
+		return $objets;
+	}
+
+	private function makeObjectFromRow($row)
+	{
+		$class = get_class($this);
+		$object = new $class;
+		foreach ($row as $attribute => $value) {
+			$attribute = underscoreToCamelCase($attribute);
+			$object->$attribute = $value;
+		}
+		return $object;
 	}
 
 	public function mapToValidAttributes($attributes = null)
 	{
-
 		if($attributes)
 			$tmpArray = array_combine($this->attributes, $attributes);
 		else 
@@ -173,7 +201,7 @@ class Model
 		return $validAttributes;		
 	}
 
-	private function makeAttributes($attributes)
+	public function makeAttributes($attributes)
 	{
 		foreach ($attributes as $key => $value) {
 			$attribute =  underscoreToCamelCase($key);
@@ -184,8 +212,6 @@ class Model
 	private function attributesToArray()
 	{
 		$attributes = [];	
-		print("\nAttributes....................");
-		print_r($this->attributes);
 		foreach ($this->attributes as $attribute => $value) {
 			$attributeVar = underscoreToCamelCase($value);
 			$attributes[$value] = $this->$attributeVar;
@@ -221,7 +247,7 @@ class Model
 		if (!count($this->rules))
 			return true;
 		print("\nRules: ");
-		print_r($this->rules);
+		//print_r($this->rules);
 
 		foreach ($this->rules as $field => $rules) {
 			$attributeVar = underscoreToCamelCase($field);

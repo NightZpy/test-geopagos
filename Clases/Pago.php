@@ -47,7 +47,8 @@ class Pago extends Model
 				}
 			} 			
 		}
-		$pagoUsuarios = new PagoUsuario()->findBy('codigo_pago', $this->codigo_pago);
+		$pagoUsuario = new PagoUsuario();
+		$pagoUsuarios = $pagoUsuario->findBy('codigo_pago', $this->codigoPago);
 		$usuarios = [];
 		foreach ($pagoUsuarios as $pagoUsuario) {
 			$usuarios[] = $pagoUsuario->usuario();
@@ -58,8 +59,8 @@ class Pago extends Model
 	private function savePagoUsuario($usuario)
 	{
 		$pagoUsuario = new PagoUsuario;
-		$pagoUsuario->codigo_usuario = $usuarios->codigo_usuario;
-		$pagoUsuario->codigo_pago = $this->codigo_pago;
+		$pagoUsuario->codigoUsuario = $usuarios->codigoUsuario;
+		$pagoUsuario->codigoPago = $this->codigoPago;
 		$pagoUsuario->save();		
 	}
 }

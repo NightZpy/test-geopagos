@@ -1,5 +1,6 @@
 <?php
 require_once ('Usuario.php');
+require_once ('Pago.php');
 require_once ('Model.php');
 
 /**
@@ -22,6 +23,14 @@ class PagoUsuario extends Model
 
 	public function usuario()
 	{
-		return new Usuario()->findByPk($this->codigo_usuario);
+		$usuario = new Usuario();
+		return $usuario->findByPk($this->codigoUsuario);
 	}
+
+	public function pago()
+	{
+		$pago = new Pago;
+		$pago->findByPk($this->codigoPago);
+		return $pago;
+	}	
 }

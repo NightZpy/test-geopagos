@@ -1,37 +1,55 @@
 <?php
 require_once ('Usuario.php');
 require_once ('Pago.php');
-	
-	$usuarios = [];
-	for ($i = 1; $i <= 20; $++) {
+		
+	/*for ($i = 1; $i <= 20; $i++) {
 		$usuario = new Usuario;
 		//$usuario->codigoUsuario = 35;
 		$usuario->usuario = 'Usuario-' . $i;
 		$usuario->clave = md5('123456');
 		$usuario->edad = rand(19, 60); 
-		$usuario->save();		
-		$usuarios[] = $usuario;
-	}
+		$usuario->save();				
+	}*/
 
-	$pagos = [];
-	for ($i = 0; $i < 60; $++) {
+	//print("\n----------------");
+	//print_r($usuarios[0]);
+	//die();
+	/*for ($i = 0; $i < 60; $i++) {
 		$pago = new Pago;
 		$pago->importe = rand(1, 10000);
-		$pago->fecha = '2016-' . rand(1, 12) . '-' . rand(1, 28);
-		$pago->save();
-		$pagos[] = $pago;
-	}
+		$pago->fecha = '2016-' . rand(8, 12) . '-' . rand(1, 28);
+		$pago->save();		
+	}*/
 
-	$pagos = array_chunk($pagos, 3);
-	$i = 0;
-	foreach ($pagos as $pago) {
-		$usuarios[$i]->pagos($pago);
+	/*$usuario = new Usuario;
+	$usuarios = $usuario->all();	
+	$pago = new Pago;
+	$pagos = $pago->all();
+	print("\nUsuarios: " . count($usuarios));
+	print("\nPagos: " . count($pagos));
+	$pagosList = array_chunk($pagos, 3);*/
+	//print("\n-------------------------------------\n");
+	//print_r($pagos);
+	//print("\n-------------------------------------\n");
+	//die;
+	/*$i = 0;
+	foreach ($pagosList as $pagos) {
+		//print("\n");
+		//print_r($pagos);
+		foreach ($pagos as $pago) 
+			$usuarios[$i]->pagos($pago);
 		$i++;
-	}
+	}*/
+	//die();
 
-	$usuario->findBy('codigo_usuario', rand(1,20), 'usuarios');
-	print("\nPagos de " . $usuario->usuario . "\n");
-	print_r($usuario->pagos());
+	$usuario = new Usuario;
+	$usuario->findByPk(rand(397, 435));
+	print("\n- Pagos de " . $usuario->usuario . "-----------------\n");
+	print("	Importe	|	Fecha	\n");
+	foreach ($usuario->pagos() as $pago) {
+		print("	" . $pago->importe . "	|	" . $pago->fecha . "	\n");
+	}
+	die();
 
 
 	//$usuario->delete();
