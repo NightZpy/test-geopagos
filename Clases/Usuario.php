@@ -45,7 +45,7 @@ class Usuario extends Model
 			return 1;
 		} 
 
-		$pagoUsuario = new PagoUsuario();
+		$pagoUsuario = new PagoUsuario;
 		$pagosUsuario = $pagoUsuario->findBy('codigo_usuario', $this->codigoUsuario);
 
 		$pagos = [];
@@ -62,5 +62,14 @@ class Usuario extends Model
 		$pagoUsuario->codigoUsuario = $this->codigoUsuario;
 		$pagoUsuario->codigoPago = $pago->codigoPago;		
 		$pagoUsuario->save();		
+	}	
+
+	public function delete()
+	{
+		$pagoUsuario = new PagoUsuario;
+		$pagosUsuario = $pagoUsuario->findBy('codigo_usuario', $this->codigoUsuario);
+		foreach ($pagosUsuario as $pagoUsuario) 
+			$pagoUsuario->delete('codigo_usuario');
+		parent::delete();		
 	}	
 }

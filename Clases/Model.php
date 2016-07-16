@@ -54,11 +54,16 @@ class Model
 		$this->run(self::makeQuery('update', $attributes, $filter));
 	}
 
-	public function delete()
+	public function delete($field = null)
 	{
 		$attributes = $this->attributesToArray();
-		$filter = [$this->primaryKey => $attributes[$this->primaryKey]];
-		unset($attributes[$this->primaryKey]);
+		if(!$field && isset($this->primaryKey)) {
+			$filter = [$this->primaryKey => $attributes[$this->primaryKey]];
+			unset($attributes[$this->primaryKey]);
+		} else {
+			$filter = [$field => $attributes[$field]];					
+		} 
+
 		$this->run(self::makeQuery('delete', null, $filter));
 	}		
 
