@@ -42,16 +42,23 @@ require_once ('Pago.php');
 	}*/
 	//die();
 
-	$usuario = new Usuario;
+	/*$usuario = new Usuario;
 	$usuario->findByPk(rand(397, 435));
 	print("\n- Pagos de " . $usuario->usuario . "-----------------\n");
 	print("	Importe	|	Fecha	\n");
 	foreach ($usuario->pagos() as $pago) {
 		print("	" . $pago->importe . "	|	" . $pago->fecha . "	\n");
-	}
-	die();
-
-
+	}*/
+	
+	$usuario = new Usuario;
+	$usuario->findByPk(rand(397, 435));
+	print("\n----------------------------");
+	print_r($usuario);
+	$usuario->usuario = 'Paul Lenyn';
+	$usuario->update();
+	$usuario->findByPk($usuario->codigo_usuario);
+	print("\n----------------------------");
+	print_r($usuario);
 	//$usuario->delete();
 
 
