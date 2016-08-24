@@ -60,12 +60,29 @@ require_once ('Pago.php');
 	print("\n----------------------------");
 	print_r($usuario);*/
 
-	$usuario = new Usuario;
+	/*$usuario = new Usuario;
 	$pk = rand(397, 435);
 	$usuario->findByPk($pk);
 	print("\n---------------Usuario a borrar-------------\n");
 	print_r($usuario);
-	$usuario->delete();
+	$usuario->delete();*/
+
+	/*$parent = new Usuario;
+	$parent->findByPk(397);
+	$usuario = new Usuario;
+	for ($i=398; $i < 404; $i++) { 
+		$favoritos = [];
+		$usuario->findByPk($i);
+		$favoritos[] = $usuario;
+		$parent->favoritos($favoritos);
+	}*/
+
+	/*$usuario = new Usuario;
+	$usuario->findByPk(397);
+	print("\n---------------Favoritos-------------\n");
+	print_r($usuario->favoritos());*/
 
 
 
+
+	

@@ -1,6 +1,7 @@
 <?php
 require_once ('Model.php');
 require_once ('Pago.php');
+require_once ('Favorito.php');
 
 /**
 * 
@@ -64,7 +65,50 @@ class Usuario extends Model
 		$pagoUsuario->save();		
 	}	
 
-	public function delete()
+	public function favoritos($favoritos = null)
+	{
+		/*if (isset($this->relations)) {
+			$relationTypes = key($this->relations);
+			if (in_array('manyToMany', $relationTypes)) {
+				$relation = $this->relations['manyToMany'];
+				if (is_a($pagos, 'Usuario')) {
+				} elseif (is_array($pagos)) {
+					
+				}				
+			}
+		}*/
+
+		if ($favoritos) {
+			if (is_a($favoritos, 'Favorito')) {
+				$this->saveUsuarioFavorito($favoritos);
+			} elseif (is_array($favoritos)) {
+				foreach ($favoritos as $favorito) {
+					$this->saveUsuarioFavorito($favorito);
+				}
+			} 			
+			return 1;
+		} 
+
+		$favorito = new Favorito;
+		$favoritos = $favorito->findBy('codigo_usuario', $this->codigoUsuario);
+
+		$favs = [];
+		foreach ($favoritos as $favorito) {
+			$fav = $favorito->usuarioFavorito();
+			$favs[] = $fav;
+		}
+		return $favs;
+	}
+
+	private function saveUsuarioFavorito($usuario)
+	{
+		$favorito = new Favorito;
+		$favorito->codigoUsuario = $this->codigoUsuario;
+		$favorito->codigoUsuarioFavorito = $usuario->codigoUsuario;		
+		$favorito->save();		
+	}
+
+	public function delete($field = null)
 	{
 		$pagoUsuario = new PagoUsuario;
 		$pagosUsuario = $pagoUsuario->findBy('codigo_usuario', $this->codigoUsuario);

@@ -64,10 +64,10 @@ class Pago extends Model
 		$pagoUsuario->save();		
 	}
 
-	public function delete()
+	public function delete($field = null)
 	{
 		$pagoUsuario = new PagoUsuario;
-		$pagosUsuario = $pagoUsuario->findBy('codigo_pago', $this->codigoPago;
+		$pagosUsuario = $pagoUsuario->findBy('codigo_pago', $this->codigoPago);
 		foreach ($pagosUsuario as $pagoUsuario) 
 			$pagoUsuario->delete('codigo_pago');
 		parent::delete();		
