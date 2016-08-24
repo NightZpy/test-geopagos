@@ -6,18 +6,18 @@ require_once('Triangulo.php');
 
 class FiguraFactory {
 
-	public static function crear($tipo) {
-			switch($tipo) {
-				case Figura::CUADRADO:
-					return new Cuadrado($cilindros);
-					break;
-				case Figura::CIRCULO:
-					return new Circulo($cilindros);
-					break;
-				case Figura::TRIANGULO:
-					return new Triangulo($cilindros);
-					break;
-			}
-		}	
+	public static function crear($tipo, $base, $altura = null) {
+		switch($tipo) {
+			case Figura::CUADRADO:
+				return new Cuadrado($base);
+				break;
+			case Figura::CIRCULO:
+				return new Circulo($base);
+				break;
+			case Figura::TRIANGULO:
+				return new Triangulo($base, $altura);
+				break;
+		}
+	}	
 
 }
