@@ -36,4 +36,14 @@ class Favorito extends Model
 	{
 		parent::delete();		
 	}	*/
+
+	public function save()
+	{
+		$attributes = $this->attributesToArray();
+		$codigoUsuario = $attributes['codigo_usuario'];
+		$codigoUsuarioFavorito = $attributes['codigo_usuario_favorito'];
+		if ($this->count($attributes)) 
+			throw new Exception("El usuario $codigoUsuario ya tiene como favorito a $codigoUsuarioFavorito!", 1);
+		parent::save();
+	}
 }

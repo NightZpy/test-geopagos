@@ -82,6 +82,14 @@ require_once ('Pago.php');
 	print("\n---------------Favoritos-------------\n");
 	print_r($usuario->favoritos());*/
 
+	$usuario = new Usuario;
+	$usuario->findByPk(397);
+	$favorito = new Usuario;
+	$favorito->findByPk(398);
+	$favoritos[] = $favorito;
+	$usuario->favoritos($favoritos);
+
+
 
 
 

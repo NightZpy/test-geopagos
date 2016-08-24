@@ -11,6 +11,8 @@ class Model
 	const UPDATE_QUERY = 'UPDATE $table_name$ SET $values$';
 	const DELETE_QUERY = 'DELETE FROM $table_name$';
 	const WHERE_QUERY = 'WHERE $filter$';
+	const FILTER_WHERE_QUERY = 'SELECT * FROM $table_name$ WHERE $filter$';
+	const COUNT_WHERE_QUERY = 'SELECT COUNT(*) FROM $table_name$ WHERE $filter$';
 	private $db = null;
 	private $rules = null;
 
@@ -67,9 +69,14 @@ class Model
 		$this->run(self::makeQuery('delete', null, $filter));
 	}		
 
-	public function select($fields = [], $filters = [], $order = [])
+	public function select($filters = [])
 	{
-		# code...
+		return $this->run(self::makeQuery('select', $filters));
+	}
+
+	public function count($filters = [])
+	{
+		return (boolean)$this->run(self::makeQuery('count', $filters));
 	}
 
 	public function findByPk($value)
@@ -144,7 +151,15 @@ class Model
 			break;	
 
 			case 'select':
+				$query 	= str_replace('$table_name$', $this->tableName, self::FILTER_WHERE_QUERY);
+				$filter = $this->makeFilter($attributes);
+				$query = str_replace('$filter$', $filter, $query);
+			break;
 
+			case 'count':
+				$query 	= str_replace('$table_name$', $this->tableName, self::COUNT_WHERE_QUERY);
+				$filter = $this->makeFilter($attributes);
+				$query = str_replace('$filter$', $filter, $query);
 			break;
 			
 			case 'delete':
@@ -214,7 +229,7 @@ class Model
 		}
 	}
 
-	private function attributesToArray()
+	public function attributesToArray()
 	{
 		$attributes = [];	
 		foreach ($this->attributes as $attribute => $value) {
