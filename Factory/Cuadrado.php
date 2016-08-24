@@ -7,7 +7,7 @@ class Cuadrado extends Figura implements iFigura
 	
 	function __construct($base)
 	{
-		parent::__construct('Cuadrado', $base);
+		parent::__construct('Cuadrado', $base, $base);
 	}
 
     public function getSuperficie() {
@@ -16,9 +16,5 @@ class Cuadrado extends Figura implements iFigura
 
     public function getDiametro() {
     	return null;
-    }
-
-    public function getAltura() {
-    	return $this->getBase();
     }
 }

@@ -9,7 +9,7 @@ class Circulo extends Figura implements iFigura
 	function __construct($radio)
 	{
 		$this->radio = $radio;
-		parent::__construct('Circulo');
+		parent::__construct('Circulo', null, null);
 	}
 
     public function getSuperficie() {
@@ -24,14 +24,4 @@ class Circulo extends Figura implements iFigura
     {
     	return $this->radio;
     }
-
-	public function getAltura()
-    {
-    	return null;
-    }    
-
-    public function getBase()
-    {
-    	return null;
-    } 
 }
