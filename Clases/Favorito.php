@@ -44,6 +44,14 @@ class Favorito extends Model
 		$codigoUsuarioFavorito = $attributes['codigo_usuario_favorito'];
 		if ($this->count($attributes)) 
 			throw new Exception("El usuario $codigoUsuario ya tiene como favorito a $codigoUsuarioFavorito!", 1);
+
+		$usuario = new Usuario;
+		if( count( $usuario->findBy( 'codigo_usuario', $codigoUsuario ) ) < 1 )
+			throw new Exception("El usuario $codigoUsuario debe ser válido!", 1);
+
+		if( count( $usuario->findBy( 'codigo_usuario', $codigoUsuarioFavorito ) ) < 1 )
+			throw new Exception("El usuario favorito $codigoUsuarioFavorito debe ser válido!", 1);
+
 		parent::save();
 	}
 }

@@ -12,7 +12,7 @@ class Model
 	const DELETE_QUERY = 'DELETE FROM $table_name$';
 	const WHERE_QUERY = 'WHERE $filter$';
 	const FILTER_WHERE_QUERY = 'SELECT * FROM $table_name$ WHERE $filter$';
-	const COUNT_WHERE_QUERY = 'SELECT COUNT(*) FROM $table_name$ WHERE $filter$';
+	const COUNT_WHERE_QUERY = 'SELECT COUNT(*) as c FROM $table_name$ WHERE $filter$';
 	private $db = null;
 	private $rules = null;
 
@@ -76,7 +76,9 @@ class Model
 
 	public function count($filters = [])
 	{
-		return (boolean)$this->run(self::makeQuery('count', $filters));
+		$count = $this->run(self::makeQuery('count', $filters));
+		print_r($count);
+		return (boolean)$count[0]['c'];
 	}
 
 	public function findByPk($value)
